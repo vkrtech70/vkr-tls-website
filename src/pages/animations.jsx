@@ -15,8 +15,9 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import EditIcon from "@mui/icons-material/Edit";
 import Loading from "../components/commonComponents/Loading";
+import AnimationFilters from "../components/TemporalAnimations/AnimationFilters";
+import MarkupAnimation from "../components/TemporalAnimations/MarkupAnimation";
 
 export default function Experiments() {
   const [loading, setLoading] = useState(true);
@@ -69,10 +70,9 @@ export default function Experiments() {
   useEffect(() => {
     fetchJsonData();
   }, []);
-  
+
   useEffect(() => {
     if (selectedFolder && Object.keys(animationsJsonData).length > 0) {
-      
       setLoading(true);
 
       const folderRef = ref(
@@ -145,7 +145,7 @@ export default function Experiments() {
 
   const handleFolderChange = useCallback((event) => {
     setSelectedFolder(event.target.value);
-    setIsEditing(false)
+    setIsEditing(false);
   }, []);
 
   const handleFileChange = (event) => {
@@ -286,29 +286,17 @@ export default function Experiments() {
             </Accordion>
             <br />
 
-            <Grid container spacing={2} className="paddingall">
-              <Grid item xs={12} md={2}>
-                <CitySelector
-                  selectedArea={selectedArea}
-                  handleCityChange={handleCityChange}
-                  cities={cities}
-                />
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <ExperimentSelector
-                  selectedFolder={selectedFolder}
-                  handleFolderChange={handleFolderChange}
-                  folders={folders}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TrendSelector
-                  htmlFiles={htmlFiles}
-                  selectedFileTitles={selectedFileTitles}
-                  handleFileChange={handleFileChange}
-                />
-              </Grid>
-            </Grid>
+            <AnimationFilters
+              selectedArea={selectedArea}
+              handleCityChange={handleCityChange}
+              cities={cities}
+              selectedFolder={selectedFolder}
+              handleFolderChange={handleFolderChange}
+              folders={folders}
+              htmlFiles={htmlFiles}
+              selectedFileTitles={selectedFileTitles}
+              handleFileChange={handleFileChange}
+            />
           </Paper>
 
           <Grid item xs={12}>
@@ -316,43 +304,16 @@ export default function Experiments() {
               {selectedFileTitles.map((title) => {
                 const file = htmlFiles.find((file) => file.title === title);
                 return (
-                  <Paper style={{ padding: 16 }} key={file.name}>
-                    {" "}
-                    {/* Use file.name as the key */}
-                    <Typography variant="h5">{title}</Typography>
-                    <video width="1100" height="600" controls>
-                      <source src={fileTitleToUrl[title]} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                    <Divider />
-                    {!isEditing ? (
-                      <Box display={"flex"} gap={1}>
-                        <Typography>{paragraphs[title] || ""}</Typography>
-                        <EditIcon
-                          style={{ cursor: "pointer" }}
-                          onClick={() => setIsEditing(true)}
-                        />
-                      </Box>
-                    ) : (
-                      <>
-                        <Typography variant="body1">
-                          <textarea
-                            rows={5}
-                            style={{ width: "100%", height: "auto" }}
-                            value={paragraphs[title] || ""}
-                            onChange={(e) =>
-                              handleParagraphChange(title, e.target.value)
-                            }
-                          />
-                        </Typography>
-                        <button
-                          onClick={() => handleSaveParagraph(file.name, title)}
-                        >
-                          Save
-                        </button>
-                      </>
-                    )}
-                  </Paper>
+                  <MarkupAnimation
+                    file={file}
+                    isEditing={isEditing}
+                    paragraphs={paragraphs}
+                    setIsEditing={setIsEditing}
+                    handleParagraphChange={handleParagraphChange}
+                    handleSaveParagraph={handleSaveParagraph}
+                    title={title}
+                    fileTitleToUrl={fileTitleToUrl}
+                  />
                 );
               })}
             </Box>
