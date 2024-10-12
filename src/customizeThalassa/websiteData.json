@@ -1,0 +1,48 @@
+{
+  "Header": {
+    "title": "Thalassa",
+    "paragraph": "Assessing Impact of Disruption and Structural Change from Investor Perspective"
+  },
+  "About": {
+    "paragraph": "Thalassa is focused on developing practial insights at the intersection of:",
+    "Why": [
+      "Spatial Analytics",
+      "Dynamic Simulation",
+      "Machine Learning",
+      "Scalable Solutions"
+    ],
+    "Why2": [
+      "Real Life Challenges",
+      "Disruptions and Structural Change",
+      "Tangible and Intangible Factors",
+      "Translate to Economic Outcomes"
+    ]
+  },
+  "visionDataModel" : "../img/vision-data-model-v2.jpg",
+  "Gallery": [
+    {
+      "title": "Optimising The Alternative Energy Transition, A Solar Electricity Generation Business Case",
+      "url": "/investigation-of-solar-energy-generation",
+      "largeImage": "../img/Energy Transition.jpg"
+    },
+    {
+      "title": "Understanding the Dynamics of Depression in Urban Areas of England.",
+      "url": "/modelling-depression-in-pandemic",
+      "largeImage": "../img/DPR1.gif"
+    },
+    {
+      "title": "Valuing the Impact of New Innovations for Aquaculture",
+      "url": "/new-vaccine-impact-on-fish-farms",
+      "largeImage": "../img/Aquaculture Value.jpg"
+    }
+  ],
+  "Contact": {
+    "email": "mglucksman@thalassa.ltd"
+  },
+  "Footer": {
+    "copyright": {
+      "text": "© 2024 Thalassa Limited. All Rights Reserved.",
+      "url": "#"
+    }
+  }
+}

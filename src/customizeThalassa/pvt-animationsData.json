@@ -1,0 +1,84 @@
+{
+  "HeadTitle": "Evolution of Depression and Prescriptions 2012-2022",
+  "SubTitle1": "Select an Experiment and a Trend from the drop down menus : (XXXN) - Denotes the analysis index ",
+  "DPR1.mp4": {
+    "Title": "DPR1 - Depression Prevalence",
+    "Paragraph": "Depression Prevalence is varies and evolves significantly across Greater London. Clusters of High and Low Depression Prevalence are visually evident and this is confirmed by the companion Morans I analysis. Over time the clusters appear to intensify and spread to adjoining areas, however, in the companion Morans I analysis the clusters appear stable (these comparsons can be viewed in the Playground). The histogram appears to be a normal distribution with a mean of 4.2 in 2012 doubling a mean of 9.2 in 2022, wheras standard deviation is 1.25 in 2012 vs not quite doubling in 2022 to 1.95 implying extremes of depression have narrowed.  However the extreme value range in 2012 0.7% -> 10% is  vs 2.7% -> 17% in 2022 (note these extreme values should be added to the animation)",
+    "Location": "Greater London LSOAs"
+  },
+  "DPR2.mp4": {
+    "Title": "DPR2 - Depression Growth",
+    "Paragraph": "Depression Growth also varies evolves significantly over time but in a very differen, seemingly random pattern compared to the steady evolution of Prevelance. Growth is simultaneiously increasing and decreasing in bursts across the map and the locations are moving around.  Clusters of high and low growth appear and dissapear from year to year and move around the map.  (Note this needs to have a companion Morans I analysis to confirm). 2013 is partiularly extreme, but this most likely relates to data definition changes.  Median growth rates between 2014-2017 start at 10% and decline to 8% with a standard deviation of 7%-8% indicating extreme variations in growth.  From 2018-2020 median growth is between 6-7% with a standard deviation of 5% suggesting a 'calmer' period.  Then, somewhat counterintutievely during the pandemic in 2021-22 the meidan growth rates decline further.  We know from other more granular data that it would be wrong to conclude the pandemic was a calmer peroid.  In fact, from month to month there were huge swings.  This implies a more frequent assesement would provide a clearer picture.  We do not have more frequent data avaiable for depression but the prescriptions dataset within the Place Based Longitudinal Resource is quarterly so there may be an opportunity to develop a synthetic quarterly dataset of depression by proportion and NHS has more frequent data that is not open source.  Nevertheless, there is a clear difference in the dynamic nature of Prevelance vs Growth. Why are the bursts of growth and declines happening?  One possiblity is threshold or tipping point effects where underlying conditions can change significantly without inducing a response up to a point and then once a threshold is reach a sudden change is triggered. So far we do not have proof this is happening. If it is, there are implications for mental health services management practices. A key goal of this research is to better understand the drivers of Depression Prevelance growth by searching for common themes in locations where bursts of growth and decline happen. This heterogeneity across space is a key reason why Spatial Analyitcs are indispensible for this reasarch.",
+    "Location": "Greater London LSOAs"
+  },
+  "PPR1.mp4": {
+    "Title": "PPR1 - Prescription Density",
+    "Paragraph": "Prescriptions Density is a similar concept to Depression Prevelance but with imporant differences. The number of Prescription per depressed patient (see PPR3) declines over time which results in a lower overall growth in denisty.  Also, prescribing practices could be changing and the number of approved medications could also be changing.  Neverltheless if these changes are uniformly distributed across the map, there should be no net relative influence on the way clusters of high and low prescriptions density are evlolving. What we see in the animation is a steady evolution similar to Depression Prevelance with clusters high and low density forming spreading and intensifying over time. By contrast with the Deperession Prevelance map there appear to be clusters of locations where Density appears very low and stable for the entire period. The histogram evolves from a median density of 0.125 to 0.180 and the standard deviation evolves from 0.03 to 0.045 implying the range of prescriptions density is becoming more extreme -- which contrasts with the reduction in extremes of Depression Prevalence and is visually consistent with the sustained very low levels of density in some LSOAs",
+    "Location": "Greater London LSOAs"
+  },
+  "PPR2.mp4": {
+    "Title": "PPR2 - Prescription Growth",
+    "Paragraph": "The growth rates computed here are from the annual change in Prescription Density in PPR1.  In line with the Depression Growth of DPR2, growth is happening in bursts in a seeming random patten over time.  This constrasts sharply with the appearence of a steady evolution of Prescriptions Density in PPR1 and reinforces the observation that there could be threshold or tipping point effects at work. The median growth rates starts at 7.3% and gradually declines to 2.5% and then, a notable difference from Depression Prevelance Growth,  is a surge of growth happening between 2018-2020 rising to 4.7% and then a decline to 1.5-1.9% in 2021-2022. Unlike Depression Prevalence Growth, the Standard Devition exceeds the growth rates for nearly the whole period implying more extreme changes of prescriptions density annually than Depression Prevelance.  Indeed the Growth Histogram has sustained 'long-tails' through the entire 2012-2022, similar to the distribution of Depression Prevelance Growth (this can be observed in the Playground).",
+    "Location": "Greater London LSOAs"
+  },
+  "PPR3.mp4": {
+    "Title": "PPR3 -Prescription Items Per Depressed Patient",
+    "Paragraph": "Items per Depressed patient is equal to the number drug types on the medical records of registered paitents diagnosed as depressed. 2012 appears to have a definition difference from subseqent years but shares the characteristic 'skewed' distribution with the majority of LSOAs having a low number of items per patient: between 1-3 and a small number of LSOAs having very high levels up to 10. The highest number of items per patient is 55. These numbers come from patients linked to specific GP practices so it is not obvioulsly a situation where a GP practice is dispensing for a larger geographic area, so such a high figure is a genuine puzzle.  The map shows clusters of high items per patient gradually fading over time. (a Morans I cluster analysis will help here)  Over time the distribution is moving to lower median and standard deviation values. Why? possibly prescribing practices are being more tightly controlled or new medications have been introduced that peform the function of several old medications.  This is an open question but there is a clear secular trend to fewer items per patient with a sustained skew to a few LSOAs having high levels.  However the most extreme LSOAs in 2013 were prescribing about 10 items per patient whereas in 2022 the extreme had dropped to about 4..",
+    "Location": "Greater London LSOAs"
+  },
+  "DGD1.mp4": {
+    "Title": "DGD1 - Depression Prevalence Growth % vs Items/Patient",
+    "Paragraph": "The Global Regression of Items Per Patient (current year, prior year needs to be added) shows little if any clear correlation of Depression Growth and Items per Patient. However, subsequent experiments using Geographically Weighted Regression produce very high corellation ",
+    "Location": "Greater London"
+  },
+  "DGD2.mp4": {
+    "Title": "DGD2 - LocalR2 Depression Growth vs Items/Patient 2014-22",
+    "Paragraph": "Depression Growth is highly correlated with Items per patietn in the great majority of LSOAs. The locations of high and low correlation are however varying over time in line with observations that growth happens in bursts",
+    "Location": "Greater London"
+  },
+  "DGD3.mp4": {
+    "Title": "DGD3 - LocalR2 Depression Prevalence vs Items/Patient 2014-22",
+    "Paragraph": "Depression Prevelance is increasingly correlated with Items per patient over time. And the correlation appears to form clusters. (A cluster analysis will help here) ",
+    "Location": "Greater London LSOAs"
+  },
+  "DGD4.mp4": {
+    "Title": "DGD4 - Depression Growth with Revised Bins",
+    "Paragraph": "This is an attempt to reveal more clearly clusters of very high Depression Prevelance growth using equal bin sizes with an underflow and overflow.",
+    "Location": "Greater London LSOAs"
+  },
+  "DGD5.mp4": {
+    "Title": "DGD5 - LocalR2 Depression Growth vs Depression Prevalence in Prior Year",
+    "Paragraph": "Depression Growth is less strongly correlated with Prior Year Depression than with Items per patient but the mean r-squared is greater than 0.6 for the entire 2012-2022 period.  However, there is a double-hump in the distribution of LSOAs with a relatively larger group of LSOAs having poor correlation of Growth with Prior Year Depression.  When we add in other factors that may explain growth this is a clue that may help understand what is different between LSOAs with high correlation vs low correlation.",
+    "Location": "Greater London LSOAs"
+  },
+  "DGD6.mp4": {
+    "Title": "DGD6 - Prescription Prevalence and Growth for Greater London",
+    "Paragraph": "No Animation",
+    "Location": "Greater London LSOAs"
+  },
+  "DGD7.mp4": {
+    "Title": "DGD7 - Prescription Prevalence and Growth",
+    "Paragraph": "No Animation",
+    "Location": "Greater London LSOAs"
+  },
+  "BTP1.mp4": {
+    "Title": "BTP1 - Benchmarking Our Morans I analysis against the Tsimpida et al result for England",
+    "Paragraph": "No Animation ",
+    "Location": "England LSOAs"
+  },
+  "BTP2.mp4": {
+    "Title": "BTP2 - Additional Benchmarking for England GWR Depression Prevelance vs IMD",
+    "Paragraph": "No Animation",
+    "Location": "England LSOAs"
+  },
+  "BTP3.mp4": {
+    "Title": "BTP3 - Benchmarking to reproduce GWR Results for Depression Prevelance vs IMD ",
+    "Paragraph": "No Animation",
+    "Location": "Greater London LSOAs"
+  },
+  "BTP4.mp4": {
+    "Title": "BTP4 - Morans I Depression Prevalence",
+    "Paragraph": "The Morans I analysis highlights groups of LSOAs where high and low levels of Depression Prevalence are adjacent and also where high and low level 'outliers' are adjacent. The Greater London Area in Morans I analysis of the whole of England appears to have a majority of low-low clusters, wheras in this analysis of only LSOAs within Greater London there are significant sustained clusters of both high-high and low-low.  By compariing this analysis to the DPR1 in the Playground, help show where clusters are sustained. Notably there are very few outlier areas -- these are potentially areas of special interest becuase they are rare.  (A further improvment will be to add the openstreet map layer to help with identifying outlier areas).",
+    "Location": "Greater London LSOAs"
+  }
+}

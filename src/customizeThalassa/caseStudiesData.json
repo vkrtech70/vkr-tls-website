@@ -1,0 +1,24 @@
+{
+  "CaseStudies": [
+    {
+      "title": "Valuing the Impact of New Innovations for Aquaculture",
+      "largeImage": "https://cdn.sanity.io/images/5gxyi0da/production/783ad00fd44e98b9c64a5cc671d10fc87c01900a-3992x2992.jpg?rect=264,123,2168,1220&w=3000&h=1688&q=80&auto=format",
+      "smallImage": "img/portfolio/case1_small.jpg"
+    },
+    {
+      "title": "Exploratory Modelling of Depression",
+      "largeImage": "https://thalassa.ltd/static/images/ABMmodelimage.png",
+      "smallImage": "img/portfolio/case2_small.jpeg"
+    },
+    {
+      "title": "Solar Energy and Retail Integration",
+      "largeImage": "https://aemo.com.au/-/media/images/site-assets/promo-tiles/renewables-square.jpg?h=1414&la=en&w=1417&hash=30144ECF443CFDCBEE6544700759176C",
+      "smallImage": "img/portfolio/case3_small.jpg"
+    },
+    {
+      "title": "Localization of COVID-19 Models",
+      "largeImage": "https://images-provider.frontiersin.org/api/ipx/w=1200&f=png/https://www.frontiersin.org/files/Articles/566853/frcmn-01-566853-HTML-r1/image_m/frcmn-01-566853-g001.jpg",
+      "smallImage": "img/portfolio/case4_small.jpg"
+    }
+  ]
+}
