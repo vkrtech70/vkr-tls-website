@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, Paper, Typography, Grid, Divider } from "@mui/material";
 import Sidenav from "../components/NavBars/Sidenav";
 import CitySelector from "../components/TemporalAnimations/CitySelector";
 import ExperimentSelector from "../components/TemporalAnimations/ExperimentSelector";
 import TrendSelector from "../components/TemporalAnimations/TrendSelector";
-import { getStorage, ref, listAll, getDownloadURL, uploadString } from "firebase/storage";
-import TooltipHeader from '../components/TooltipHeader';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Title } from "@mui/icons-material";
+import {
+  getStorage,
+  ref,
+  listAll,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import EditIcon from "@mui/icons-material/Edit";
 import Loading from "../components/commonComponents/Loading";
-import { waitFor } from "@testing-library/react";
-
 
 export default function Experiments() {
   const [loading, setLoading] = useState(true);
   const [folders, setFolders] = useState([]);
   const [htmlFiles, setHtmlFiles] = useState([]);
-  console.log("htmlFiles", htmlFiles)
+  const [isEditing, setIsEditing] = useState(false);
+  console.log("htmlFiles", htmlFiles);
 
   const [selectedFolder, setSelectedFolder] = useState("");
   const [selectedFileTitles, setSelectedFileTitles] = useState([]);
@@ -65,9 +69,55 @@ export default function Experiments() {
   useEffect(() => {
     fetchJsonData();
   }, []);
+  
+  useEffect(() => {
+    if (selectedFolder && Object.keys(animationsJsonData).length > 0) {
+      
+      setLoading(true);
+
+      const folderRef = ref(
+        storage,
+        `Experiments/Temporal Animations/${selectedArea}/${selectedFolder}`
+      );
+
+      listAll(folderRef)
+        .then((res) => {
+          const filePromises = res.items.map(async (itemRef) => {
+            const url = await getDownloadURL(itemRef);
+            const name = itemRef.name;
+            const title = animationsJsonData[name]?.Title || name;
+            const location = animationsJsonData[name]?.Location || name;
+            return { name, url, title, location, ...animationsJsonData[name] };
+          });
+          return Promise.all(filePromises);
+        })
+        .then((files) => {
+          setHtmlFiles(files);
+          const titleToUrl = files.reduce(
+            (acc, file) => ({ ...acc, [file.title]: file.url }),
+            {}
+          );
+          setFileTitleToUrl(titleToUrl);
+
+          if (files.length > 0) {
+            const defaultTitle = files[0].title;
+            setSelectedFileTitles([defaultTitle]);
+            setParagraphs({ [defaultTitle]: files[0].Paragraph || "" });
+          } else {
+            setSelectedFileTitles([]);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Failed to load HTML files:", error);
+          setLoading(false);
+        });
+    }
+  }, [selectedFolder, animationsJsonData]);
 
   // Fetch folders from Firebase Storage
   useEffect(() => {
+    setLoading(true);
     const experimentsRef = ref(storage, "Experiments/Temporal Animations/");
 
     listAll(experimentsRef)
@@ -83,61 +133,25 @@ export default function Experiments() {
         if (folderNames.length > 0) {
           const firstFolder = folderNames[0];
           setSelectedFolder(firstFolder);
-          handleFolderChange({ target: { value: firstFolder } });
         } else {
-          // setLoading(false);
+          setLoading(false);
         }
       })
       .catch((error) => {
         console.error("Failed to load folders:", error);
-        // setLoading(false);
+        setLoading(false);
       });
   }, []);
 
-  const handleFolderChange = (event) => {
-    const folder = event.target.value;
-    setSelectedFolder(folder);
-    setLoading(true);
-
-    const folderRef = ref(storage, `Experiments/Temporal Animations/${selectedArea}/${folder}`);
-
-    listAll(folderRef)
-      .then((res) => {
-        const filePromises = res.items.map(async (itemRef) => {
-          const url = await getDownloadURL(itemRef);
-          const name = itemRef.name;
-          const title = animationsJsonData[name]?.Title || name;
-          const location = animationsJsonData[name]?.Location || name;
-          return { name, url, title, location, ...animationsJsonData[name] };
-        });
-        return Promise.all(filePromises);
-      })
-      .then((files) => {
-        setHtmlFiles(files);
-        const titleToUrl = files.reduce((acc, file) => ({ ...acc, [file.title]: file.url }), {});
-        setFileTitleToUrl(titleToUrl);
-
-        if (files.length > 0) {
-          const defaultTitle = files[0].title;
-          setSelectedFileTitles([defaultTitle]);
-          setParagraphs({ [defaultTitle]: files[0].Paragraph || "" });
-        } else {
-          setSelectedFileTitles([]);
-        }
-
-        // setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Failed to load HTML files:", error);
-        // setLoading(false);
-      });
-
-    // Fetch JSON data on folder change
-    fetchJsonData();
-  };
+  const handleFolderChange = useCallback((event) => {
+    setSelectedFolder(event.target.value);
+    setIsEditing(false)
+  }, []);
 
   const handleFileChange = (event) => {
-    const { target: { value } } = event;
+    const {
+      target: { value },
+    } = event;
     const selectedFiles = typeof value === "string" ? value.split(",") : value;
 
     // Update selected file titles
@@ -148,7 +162,7 @@ export default function Experiments() {
       const selectedFile = htmlFiles.find((file) => file.title === fileTitle);
       return {
         ...acc,
-        [fileTitle]: selectedFile?.Paragraph || ""  // Add paragraph for each file title
+        [fileTitle]: selectedFile?.Paragraph || "", // Add paragraph for each file title
       };
     }, {});
 
@@ -157,7 +171,7 @@ export default function Experiments() {
   const handleParagraphChange = (title, newParagraph) => {
     setParagraphs((prev) => ({
       ...prev,
-      [title]: newParagraph // Use title instead of name as key
+      [title]: newParagraph, // Use title instead of name as key
     }));
   };
 
@@ -174,8 +188,8 @@ export default function Experiments() {
         //   data[name].Paragraph = paragraphs[name]; // Update existing entry
         // } else {
         // If the title doesn't exist, add it
-        console.log(name, title, paragraphs)
-        data[name].Paragraph = paragraphs[title]
+        console.log(name, title, paragraphs);
+        data[name].Paragraph = paragraphs[title];
         // data[name] = {
         //   // Title: title,
         //   Paragraph: paragraphs[title] || "", // Use title as key
@@ -186,8 +200,11 @@ export default function Experiments() {
         const updatedJson = JSON.stringify(data);
 
         // Use uploadString with content type specified
-        uploadString(jsonFileRef, updatedJson, 'raw', { contentType: 'application/json' })
+        uploadString(jsonFileRef, updatedJson, "raw", {
+          contentType: "application/json",
+        })
           .then(() => {
+            setIsEditing(false);
             console.log(`Paragraph for ${title} has been saved successfully!`);
             console.log("Updated JSON Data:", data);
           })
@@ -200,10 +217,9 @@ export default function Experiments() {
       });
   };
 
-
   const handleCityChange = (event) => {
     setSelectedArea(event.target.value);
-    fetchJsonData();  // Fetch JSON data on city change
+    fetchJsonData(); // Fetch JSON data on city change
   };
 
   if (loading) {
@@ -215,9 +231,11 @@ export default function Experiments() {
     <div className="bgcolor">
       <Box sx={{ display: "flex", height: "100%" }}>
         <Sidenav />
-        <Box sx={{ padding: '20px' }}>
+        <Box sx={{ padding: "20px" }}>
           <Paper style={{ padding: 16 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
+            <Box
+              sx={{ display: "flex", alignItems: "center", marginBottom: 2 }}
+            >
               <h2 style={{ marginRight: 8 }}>{animationsJsonData.HeadTitle}</h2>
             </Box>
 
@@ -226,58 +244,69 @@ export default function Experiments() {
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1-content"
                 id="panel1-header"
-                sx={{ backgroundColor: 'lightgrey' }}
+                sx={{ backgroundColor: "lightgrey" }}
               >
                 <strong> Summary of Analysis available here </strong>
               </AccordionSummary>
               <AccordionDetails>
                 DPR and PPR: Primary Analysis directly showing spatial data
                 <br /> <br />
-
                 <strong>Depression Prevelance and Growth = DPR</strong>
                 <br /> Direct Display of Spatial Analysis over time
-
-                <br /> DPR1 - Depression Prevelance: %  of all GP registered patients  diganosed as depressed in each LSOA
-                <br /> DPR2 - Depression Growth: % annual change of DPR1 in each LSOA
-
+                <br /> DPR1 - Depression Prevelance: % of all GP registered
+                patients diganosed as depressed in each LSOA
+                <br /> DPR2 - Depression Growth: % annual change of DPR1 in each
+                LSOA
                 <br /> <br />
-
                 <strong> Prescriptions Prevelance and Growth = PPR </strong>
-                <br /> PPR1 - Prescriptions Prevelance: % of all GP registered patients with anti-depressant prescription in each LSOA
-                <br /> PPR2 - Prescriptions Growth: % annual change of PPR1 in each LSOA
-                <br /> PPR3 - Prescription Items per Depressed Patient  PPR1/DPR1
+                <br /> PPR1 - Prescriptions Prevelance: % of all GP registered
+                patients with anti-depressant prescription in each LSOA
+                <br /> PPR2 - Prescriptions Growth: % annual change of PPR1 in
+                each LSOA
+                <br /> PPR3 - Prescription Items per Depressed Patient PPR1/DPR1
                 <br /> <br />
-
                 <strong> Depression Growth Drivers = DGD </strong>
                 <br /> Exploratory Spatial Analysis over time and time snapshots
-
                 <br /> <> (Some animations start from 2014 - 2022) </>
                 <br /> DGD1 - Depression Growth vs Items per Patient Global
-                <br /> DGD2 - LocalR2: Depression Growth vs Prior Year Items per Patient
-                <br /> DGD3 - LocalR2: Depression Prevelance vs Prior Year Items per Patient
-                <br /> DGD4 - Depression Growth (Alternative Depression Growth Groups)
-                <br /> DGD5 - LocalR2: Depression Growth vs Prior Year Depresssion Prevalence
+                <br /> DGD2 - LocalR2: Depression Growth vs Prior Year Items per
+                Patient
+                <br /> DGD3 - LocalR2: Depression Prevelance vs Prior Year Items
+                per Patient
+                <br /> DGD4 - Depression Growth (Alternative Depression Growth
+                Groups)
+                <br /> DGD5 - LocalR2: Depression Growth vs Prior Year
+                Depresssion Prevalence
                 <br /> <br />
-
-
                 <strong> Benchmark Tsimpidia Paper = BTP </strong>
-                <br /> Benchmark: Unravelling the dynamics of mental health inequalities in England, Tsimpida et al (2024)
+                <br /> Benchmark: Unravelling the dynamics of mental health
+                inequalities in England, Tsimpida et al (2024)
                 <br /> BTP4 - Morans I Depression Prevalence LISA CLusters
-
-
               </AccordionDetails>
             </Accordion>
             <br />
 
             <Grid container spacing={2} className="paddingall">
               <Grid item xs={12} md={2}>
-                <CitySelector selectedArea={selectedArea} handleCityChange={handleCityChange} cities={cities} />
+                <CitySelector
+                  selectedArea={selectedArea}
+                  handleCityChange={handleCityChange}
+                  cities={cities}
+                />
               </Grid>
               <Grid item xs={12} md={4}>
-                <ExperimentSelector selectedFolder={selectedFolder} handleFolderChange={handleFolderChange} folders={folders} />
+                <ExperimentSelector
+                  selectedFolder={selectedFolder}
+                  handleFolderChange={handleFolderChange}
+                  folders={folders}
+                />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TrendSelector htmlFiles={htmlFiles} selectedFileTitles={selectedFileTitles} handleFileChange={handleFileChange} />
+                <TrendSelector
+                  htmlFiles={htmlFiles}
+                  selectedFileTitles={selectedFileTitles}
+                  handleFileChange={handleFileChange}
+                />
               </Grid>
             </Grid>
           </Paper>
@@ -287,27 +316,45 @@ export default function Experiments() {
               {selectedFileTitles.map((title) => {
                 const file = htmlFiles.find((file) => file.title === title);
                 return (
-                  <Paper style={{ padding: 16 }} key={file.name}> {/* Use file.name as the key */}
+                  <Paper style={{ padding: 16 }} key={file.name}>
+                    {" "}
+                    {/* Use file.name as the key */}
                     <Typography variant="h5">{title}</Typography>
                     <video width="1100" height="600" controls>
                       <source src={fileTitleToUrl[title]} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                     <Divider />
-                    <Typography variant="body1">
-                      <textarea
-                        rows={5}
-                        style={{ width: "100%", height: "auto" }} 
-
-                        value={paragraphs[title] || ""} 
-                        onChange={(e) => handleParagraphChange(title, e.target.value)} 
-                      />
-                    </Typography>
-                    <button onClick={() => handleSaveParagraph(file.name, title)}>Save</button> 
+                    {!isEditing ? (
+                      <Box display={"flex"} gap={1}>
+                        <Typography>{paragraphs[title] || ""}</Typography>
+                        <EditIcon
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setIsEditing(true)}
+                        />
+                      </Box>
+                    ) : (
+                      <>
+                        <Typography variant="body1">
+                          <textarea
+                            rows={5}
+                            style={{ width: "100%", height: "auto" }}
+                            value={paragraphs[title] || ""}
+                            onChange={(e) =>
+                              handleParagraphChange(title, e.target.value)
+                            }
+                          />
+                        </Typography>
+                        <button
+                          onClick={() => handleSaveParagraph(file.name, title)}
+                        >
+                          Save
+                        </button>
+                      </>
+                    )}
                   </Paper>
                 );
               })}
-
             </Box>
           </Grid>
         </Box>
