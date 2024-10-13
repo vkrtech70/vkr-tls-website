@@ -1,8 +1,17 @@
-import { Box, Divider, Paper, Typography } from '@mui/material'
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import React from 'react'
+import React from "react";
 
-function MarkupAnimation({ file, isEditing, paragraphs, setIsEditing, handleParagraphChange, handleSaveParagraph, title, fileTitleToUrl }) {
+function MarkupAnimation({
+  file,
+  isEditing,
+  paragraphs,
+  setIsEditing,
+  handleParagraphChange,
+  handleSaveParagraph,
+  title,
+  fileTitleToUrl,
+}) {
   return (
     <Paper style={{ padding: 16 }} key={file.name}>
       {" "}
@@ -28,20 +37,17 @@ function MarkupAnimation({ file, isEditing, paragraphs, setIsEditing, handlePara
               rows={5}
               style={{ width: "100%", height: "auto" }}
               value={paragraphs[title] || ""}
-              onChange={(e) =>
-                handleParagraphChange(title, e.target.value)
-              }
+              onChange={(e) => handleParagraphChange(title, e.target.value)}
             />
           </Typography>
-          <button
-            onClick={() => handleSaveParagraph(file.name, title)}
-          >
+          <button onClick={() => handleSaveParagraph(file.name, title)}>
             Save
           </button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
         </>
       )}
     </Paper>
-  )
+  );
 }
 
-export default MarkupAnimation
+export default MarkupAnimation;

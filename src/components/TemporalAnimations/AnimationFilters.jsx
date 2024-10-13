@@ -1,8 +1,8 @@
-import { Grid } from '@mui/material'
-import React from 'react'
-import CitySelector from './CitySelector'
-import ExperimentSelector from './ExperimentSelector'
-import TrendSelector from './TrendSelector'
+import { Grid } from "@mui/material";
+import React from "react";
+import CitySelector from "./CitySelector";
+import ExperimentSelector from "./ExperimentSelector";
+import TrendSelector from "./TrendSelector";
 
 function AnimationFilters({
   selectedArea,
@@ -39,7 +39,7 @@ function AnimationFilters({
         />
       </Grid>
     </Grid>
-  )
+  );
 }
 
-export default AnimationFilters
+export default AnimationFilters;

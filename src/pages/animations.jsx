@@ -24,8 +24,6 @@ export default function Experiments() {
   const [folders, setFolders] = useState([]);
   const [htmlFiles, setHtmlFiles] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  console.log("htmlFiles", htmlFiles);
-
   const [selectedFolder, setSelectedFolder] = useState("");
   const [selectedFileTitles, setSelectedFileTitles] = useState([]);
   const [fileTitleToUrl, setFileTitleToUrl] = useState({});
@@ -48,9 +46,7 @@ export default function Experiments() {
           .then((response) => response.json())
           .then((data) => {
             setAnimationsJsonData(data);
-            console.log("Successfully fetched JSON data:", data);
-
-            // Delay the loading state change by 5 seconds (5000 milliseconds)
+            // // Delay the loading state change by 5 seconds (5000 milliseconds)
             setTimeout(() => {
               setLoading(false);
             }, 0);
@@ -188,7 +184,7 @@ export default function Experiments() {
         //   data[name].Paragraph = paragraphs[name]; // Update existing entry
         // } else {
         // If the title doesn't exist, add it
-        console.log(name, title, paragraphs);
+        // console.log(name, title, paragraphs);
         data[name].Paragraph = paragraphs[title];
         // data[name] = {
         //   // Title: title,
@@ -205,8 +201,9 @@ export default function Experiments() {
         })
           .then(() => {
             setIsEditing(false);
-            console.log(`Paragraph for ${title} has been saved successfully!`);
-            console.log("Updated JSON Data:", data);
+            fetchJsonData();
+            // console.log(`Paragraph for ${title} has been saved successfully!`);
+            // console.log("Updated JSON Data:", data);
           })
           .catch((error) => {
             console.error("Failed to upload updated JSON data:", error);
@@ -305,6 +302,7 @@ export default function Experiments() {
                 const file = htmlFiles.find((file) => file.title === title);
                 return (
                   <MarkupAnimation
+                    key={title}
                     file={file}
                     isEditing={isEditing}
                     paragraphs={paragraphs}
